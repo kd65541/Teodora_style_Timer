@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workout Timer</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+      background-color: lightblue;
+    }
+
+    #timer {
+      font-size: 8em;
+      margin: 20px;
+    }
+
+    .button {
+      font-size: 1em;
+      padding: 10px;
+      margin: 5px;
+    }
+  </style>
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <p>
+    <center>
+      <h2>Workout Timer</h2>
+    </center>
+  </p>
+
+  <p>
+    <center>
+      <div id="timer">00:00</div>
+  </p>
+  <img id="timerImage" src="/img/timesup.gif" alt="Timer Image" hidden>
+  <audio id="timerSound" src="sound/ringtimer.mp3" preload="auto"></audio>
+
+
+
+  <p>
+    <center><label for="minutes">Minutes:</label>
+      <input type="number" id="minutes" value="0" min="0" style="font-size: 1em;">
+      <label for="seconds">Seconds:</label>
+      <input type="number" id="seconds" value="0" min="0" max="59" style="font-size: 1em;">
+      <br><br>
+
+      <button class="button" id="startButton">Start</button>
+      <button class="button" id="pauseButton">Pause</button>
+      <button class="button" id="resumeButton">Resume</button>
+      <button class="button" id="resetButton">Reset</button>
+    </center>
+
+
+    <script>
+      let timer;
+      let isPaused = false;
+      let remainingTime = 0;
+
+      function updateDisplay(time) {
+        let minutes = Math.floor(time / 60);
+        let seconds = time % 60;
+        document.getElementById('timer').textContent =
+          (minutes < 10 ? '0' : '') + minutes + ':' +
+          (seconds < 10 ? '0' : '') + seconds;
+      }
+
+      function startTimer() {
+        let minutes = parseInt(document.getElementById('minutes').value) || 0;
+        let seconds = parseInt(document.getElementById('seconds').value) || 0;
+        remainingTime = minutes * 60 + seconds;
+        updateDisplay(remainingTime);
+        if (timer) {
+          clearInterval(timer);
+        }
+        timer = setInterval(function () {
+          if (!isPaused && remainingTime > 0) {
+            remainingTime--;
+            updateDisplay(remainingTime);
+          } else if (remainingTime === 0) {
+            clearInterval(timer);
+            alert("Time's up!");
+          }
+        }, 1000);
+      }
+
+      function pauseTimer() {
+        isPaused = true;
+      }
+
+      function resumeTimer() {
+        isPaused = false;
+      }
+
+      function resetTimer() {
+        clearInterval(timer);
+        remainingTime = 0;
+        updateDisplay(remainingTime);
+      }
+
+    </script>
+  </p>
+</body>
+
+</html>
